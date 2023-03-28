@@ -19,6 +19,27 @@ app.get("/", function (request, response) {
   response.send("hello");
 });
 
+
+// ------------------------------------------- get shopName by ID (API)  -------------------------------------------
+
+
+app.get("/shopDetails/:id", async function (request, response) {
+
+  const {id} = request.params;
+
+  const data = await client
+    .db("Swiggy")
+    .collection("product")
+    .find({})
+    .toArray();
+
+  response.send(data[id]);
+});
+
+
+// ------------------------------------------- get All shop details (API)  -------------------------------------------
+
+
 app.get("/data", async function (request, response) {
 
   const data = await client
@@ -95,21 +116,6 @@ app.post("/createData", express.json() , async function (request, response) {
 });
 
 
-// ------------------------------------------- delete All data (API) --------------------------------------------
-
-
-app.delete("/deleteAll", async function (request, response) {
-
-  const result = await client
-    .db("Swiggy")
-    .collection("product")
-    .deleteMany({});
-
-  response.send(result);
-});
-
-
-
 // ------------------------------------------- update shop data (API) --------------------------------------------
 
 
@@ -124,5 +130,20 @@ app.put("/shopId/:id",express.json(), async function (request, response) {
 
   response.send(result);
 });
+
+
+// ------------------------------------------- delete All data (API) --------------------------------------------
+
+
+app.delete("/deleteAll", async function (request, response) {
+
+  const result = await client
+    .db("Swiggy")
+    .collection("product")
+    .deleteMany({});
+
+  response.send(result);
+});
+
 
 app.listen(PORT, () => console.log(`Connected in ${PORT}`));
