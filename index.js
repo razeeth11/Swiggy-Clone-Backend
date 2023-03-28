@@ -49,22 +49,6 @@ app.get("/data", async function (request, response) {
   response.send(data);
 });
 
-// ------------------------------------------- get shopDetails by ID (API)  -------------------------------------------
-
-app.get("/shopDetails/:id", async function (request, response) {
-
-  const {id} = request.params;
-
-  const data = await client
-    .db("Swiggy")
-    .collection("product")
-    .find({})
-    .toArray();
-
-  const ar = data.map((ev)=> ev.shopItems)
-  response.send(ar[id]);
-});
-
 
 // ------------------------------------------- get shopDetails by Delivery Time (API)  -------------------------------------------
 
