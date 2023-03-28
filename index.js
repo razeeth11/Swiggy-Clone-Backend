@@ -22,7 +22,6 @@ app.get("/", function (request, response) {
 
 // ------------------------------------------- get shopName by ID (API)  -------------------------------------------
 
-
 app.get("/shopDetails/:id", async function (request, response) {
 
   const {id} = request.params;
@@ -39,7 +38,6 @@ app.get("/shopDetails/:id", async function (request, response) {
 
 // ------------------------------------------- get All shop details (API)  -------------------------------------------
 
-
 app.get("/data", async function (request, response) {
 
   const data = await client
@@ -52,7 +50,6 @@ app.get("/data", async function (request, response) {
 });
 
 // ------------------------------------------- get shopDetails by ID (API)  -------------------------------------------
-
 
 app.get("/shopDetails/:id", async function (request, response) {
 
@@ -71,7 +68,6 @@ app.get("/shopDetails/:id", async function (request, response) {
 
 // ------------------------------------------- get shopDetails by Delivery Time (API)  -------------------------------------------
 
-
 app.get("/deliveryTime", async function (request, response) {
 
   const data = await client
@@ -84,9 +80,36 @@ app.get("/deliveryTime", async function (request, response) {
 });
 
 
+// ------------------------------------------- get shopDetails by low to high (API)  -------------------------------------------
+
+app.get("/LowToHigh", async function (request, response) {
+
+  const data = await client
+    .db("Swiggy")
+    .collection("product")
+    .find({}).sort( { price : 1} )
+    .toArray();
+
+  response.send(data);
+});
+
+
+// ------------------------------------------- get shopDetails by low to high (API)  -------------------------------------------
+
+app.get("/HighToLow", async function (request, response) {
+
+  const data = await client
+    .db("Swiggy")
+    .collection("product")
+    .find({}).sort( { price : -1} )
+    .toArray();
+
+  response.send(data);
+});
+
+
 
 // ------------------------------------------- get shopDetails by Rating (API)  -------------------------------------------
-
 
 app.get("/Rating", async function (request, response) {
 
@@ -103,7 +126,6 @@ app.get("/Rating", async function (request, response) {
 
 // ------------------------------------------- create data (API) -------------------------------------------
 
-
 app.post("/createData", express.json() , async function (request, response) {
 
   const data = request.body;
@@ -118,7 +140,6 @@ app.post("/createData", express.json() , async function (request, response) {
 
 // ------------------------------------------- update shop data (API) --------------------------------------------
 
-
 app.put("/shopId/:id",express.json(), async function (request, response) {
   const {id} = request.params;
   const data = request.body;
@@ -132,8 +153,7 @@ app.put("/shopId/:id",express.json(), async function (request, response) {
 });
 
 
-// ------------------------------------------- delete All data (API) --------------------------------------------
-
+// ------------------------------------------ delete All data (API) --------------------------------------------
 
 app.delete("/deleteAll", async function (request, response) {
 
