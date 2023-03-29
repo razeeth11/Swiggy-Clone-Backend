@@ -162,4 +162,18 @@ app.delete("/delete/:shopName", async function (request, response) {
   response.send(result);
 });
 
+// create bank payment offer API
+
+app.post("/paymentOffers", express.json() , async function (request, response) {
+
+  const data = request.body;
+
+  const result = await client
+    .db("Swiggy")
+    .collection("paymentOffers")
+    .insertMany(data)
+
+  response.send(result);
+});
+
 app.listen(PORT, () => console.log(`Connected in ${PORT}`));
