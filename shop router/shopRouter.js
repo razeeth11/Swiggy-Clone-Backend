@@ -3,12 +3,12 @@ import { client } from "../index.js";
 const router = express.Router();
 
 // ------------------------------------------- Backend Home Page -------------------------------------------
-router.get("/", function (request, response) {
+router.get("", function (request, response) {
   response.send("hello");
 });
 
 // ------------------------------------------- get All shop details (API)  -------------------------------------------
-router.get("/data", async function (request, response) {
+router.get("data", async function (request, response) {
   const data = await client
     .db("Swiggy")
     .collection("product")
