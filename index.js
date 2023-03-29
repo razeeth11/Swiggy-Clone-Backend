@@ -22,17 +22,16 @@ app.get("/", function (request, response) {
 
 // ------------------------------------------- get shopName by ID (API)  -------------------------------------------
 
-app.get("/shopDetails/:id", async function (request, response) {
+app.get("/shopDetails/:shopName", async function (request, response) {
 
-  const {id} = request.params;
+  const {shopName} = request.params;
 
   const data = await client
     .db("Swiggy")
     .collection("product")
-    .find({})
-    .toArray();
+    .findOne({shopName : shopName})
 
-  response.send(data[id]);
+  response.send(data);
 });
 
 
