@@ -164,7 +164,7 @@ app.delete("/delete/:shopName", async function (request, response) {
 
 // create bank payment offer API
 
-app.post("/paymentOffers", express.json() , async function (request, response) {
+app.post("/createPaymentOffers", express.json() , async function (request, response) {
 
   const data = request.body;
 
@@ -172,6 +172,20 @@ app.post("/paymentOffers", express.json() , async function (request, response) {
     .db("Swiggy")
     .collection("paymentOffers")
     .insertMany(data)
+
+  response.send(result);
+});
+
+
+// get bank payment offer API
+
+app.post("/PaymentOffers" , async function (request, response) {
+
+  const result = await client
+    .db("Swiggy")
+    .collection("paymentOffers")
+    .find({})
+    .toArray()
 
   response.send(result);
 });
