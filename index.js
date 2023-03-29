@@ -1,119 +1,163 @@
 import express from "express";
 import { MongoClient } from "mongodb";
 import cors from "cors";
-import {
-  getDataByShopName,
-  getAllShopData,
-  getDataByDeliveryTime,
-  getDataByLowToHigh,
-  getDataByHighToLow,
-  getDataByRating,
-  createShopData,
-  updateShop,
-  deleteAllShop,
-  deleteOneShop,
-} from "./getDataFunctions.js";
 
 const PORT = 5000;
 const app = express();
 
 // const URL = "mongodb://127.0.0.1";
 const URL = "mongodb+srv://Swiggy:Swiggy123@cluster0.mxmqnga.mongodb.net";
-export const client = new MongoClient(URL);
+const client = new MongoClient(URL);
 client.connect();
+
 
 app.use(cors());
 
-//  Backend Home Page
+// ------------------------------------------- Backend Home Page -------------------------------------------
 
 app.get("/", function (request, response) {
   response.send("hello");
 });
 
-//  get shopName by shopName (API)
+
+// ------------------------------------------- get shopName by ID (API)  -------------------------------------------
 
 app.get("/shopDetails/:shopName", async function (request, response) {
-  const { shopName } = request.params;
 
-  const data = await getDataByShopName(shopName);
+  const {shopName} = request.params;
+
+  const data = await client
+    .db("Swiggy")
+    .collection("product")
+    .findOne({shopName : shopName})
 
   response.send(data);
 });
 
-//  get All shop details (API)
+
+// ------------------------------------------- get All shop details (API)  -------------------------------------------
 
 app.get("/data", async function (request, response) {
-  const data = await getAllShopData();
+
+  const data = await client
+    .db("Swiggy")
+    .collection("product")
+    .find({})
+    .toArray();
 
   response.send(data);
 });
 
-//  get shopDetails by Delivery Time (API)
+
+// ------------------------------------------- get shopDetails by Delivery Time (API)  -------------------------------------------
 
 app.get("/deliveryTime", async function (request, response) {
-  const data = await getDataByDeliveryTime();
+
+  const data = await client
+    .db("Swiggy")
+    .collection("product")
+    .find({}).sort( { delivery : 1} )
+    .toArray();
 
   response.send(data);
 });
 
-//  get shopDetails by low to high (API)
+
+// ------------------------------------------- get shopDetails by low to high (API)  -------------------------------------------
 
 app.get("/LowToHigh", async function (request, response) {
-  const data = await getDataByLowToHigh();
+
+  const data = await client
+    .db("Swiggy")
+    .collection("product")
+    .find({}).sort( { price : 1} )
+    .toArray();
 
   response.send(data);
 });
 
-//  get shopDetails by high to low (API)
+
+// ------------------------------------------- get shopDetails by high to low (API)  -------------------------------------------
 
 app.get("/HighToLow", async function (request, response) {
-  const data = await getDataByHighToLow();
+
+  const data = await client
+    .db("Swiggy")
+    .collection("product")
+    .find({}).sort( { price : -1} )
+    .toArray();
 
   response.send(data);
 });
 
-//  get shopDetails by Rating (API)
+
+
+// ------------------------------------------- get shopDetails by Rating (API)  -------------------------------------------
 
 app.get("/Rating", async function (request, response) {
-  const data = await getDataByRating();
+
+  const data = await client
+    .db("Swiggy")
+    .collection("product")
+    .find({}).sort( { rating : -1} )
+    .toArray();
 
   response.send(data);
 });
 
-//  create data (API)
 
-app.post("/createData", express.json(), async function (request, response) {
+
+// ------------------------------------------- create data (API) -------------------------------------------
+
+app.post("/createData", express.json() , async function (request, response) {
+
   const data = request.body;
-  const result = await createShopData(data);
+  const result = await client
+    .db("Swiggy")
+    .collection("product")
+    .insertMany(data);
 
   response.send(result);
 });
 
-//  update shop data (API) -
 
-app.put("/shopId/:id", express.json(), async function (request, response) {
-  const { id } = request.params;
+// ------------------------------------------- update shop data (API) --------------------------------------------
+
+app.put("/shopId/:id",express.json(), async function (request, response) {
+  const {id} = request.params;
   const data = request.body;
 
-  const result = await updateShop(id, data);
+  const result = await client
+    .db("Swiggy")
+    .collection("product")
+    .updateOne({id : id } , { $set : data});
 
   response.send(result);
 });
 
-//  delete All data (API) -
+
+// ------------------------------------------ delete All data (API) --------------------------------------------
 
 app.delete("/deleteAll", async function (request, response) {
-  const result = await deleteAllShop();
+
+  const result = await client
+    .db("Swiggy")
+    .collection("product")
+    .deleteMany({});
 
   response.send(result);
 });
 
-//  delete one shop data (API) -
+// ------------------------------------------ delete one shop data (API) --------------------------------------------
 
 app.delete("/delete/:shopName", async function (request, response) {
-  const { shopName } = request.params;
 
-  const result = await deleteOneShop(shopName);
+  const {shopName} = request.params;
+
+  const result = await client
+    .db("Swiggy")
+    .collection("product")
+    .deleteOne({shopName : shopName});
 
   response.send(result);
 });
