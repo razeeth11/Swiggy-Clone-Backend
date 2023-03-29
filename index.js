@@ -190,4 +190,33 @@ app.get("/PaymentOffers" , async function (request, response) {
   response.send(result);
 });
 
+
+// create city links API  
+
+app.post("/createCityLinks", express.json() , async function (request, response) {
+
+  const data = request.body;
+
+  const result = await client
+    .db("Swiggy")
+    .collection("cityLinks")
+    .insertMany(data)
+
+  response.send(result);
+});
+
+
+// get city links API  
+
+app.get("/CityLinks" , async function (request, response) {
+
+  const result = await client
+    .db("Swiggy")
+    .collection("cityLinks")
+    .find({})
+    .toArray()
+
+  response.send(result);
+});
+
 app.listen(PORT, () => console.log(`Connected in ${PORT}`));
