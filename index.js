@@ -179,7 +179,7 @@ app.post("/createPaymentOffers", express.json() , async function (request, respo
 
 // get bank payment offer API
 
-app.post("/PaymentOffers" , async function (request, response) {
+app.get("/PaymentOffers" , async function (request, response) {
 
   const result = await client
     .db("Swiggy")
