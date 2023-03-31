@@ -1,44 +1,40 @@
 import express from "express";
 import { MongoClient } from "mongodb";
 import cors from "cors";
+import { getUserPhoneNumber } from "./getUserPhoneNumber.js";
 
 const PORT = 5000;
 const app = express();
 
 // const URL = "mongodb://127.0.0.1";
 const URL = "mongodb+srv://Swiggy:Swiggy123@cluster0.mxmqnga.mongodb.net";
-const client = new MongoClient(URL);
+export const client = new MongoClient(URL);
 client.connect();
-
 
 app.use(cors());
 
-//  Backend Home Page 
+//  Backend Home Page
 
 app.get("/", function (request, response) {
   response.send("hello");
 });
 
-
-//  get shopName by ID (API)  
+//  get shopName by ID (API)
 
 app.get("/shopDetails/:shopName", async function (request, response) {
-
-  const {shopName} = request.params;
+  const { shopName } = request.params;
 
   const data = await client
     .db("Swiggy")
     .collection("product")
-    .findOne({shopName : shopName})
+    .findOne({ shopName: shopName });
 
   response.send(data);
 });
 
-
-//  get All shop details (API)  
+//  get All shop details (API)
 
 app.get("/data", async function (request, response) {
-
   const data = await client
     .db("Swiggy")
     .collection("product")
@@ -48,69 +44,61 @@ app.get("/data", async function (request, response) {
   response.send(data);
 });
 
-
-//  get shopDetails by Delivery Time (API)  
+//  get shopDetails by Delivery Time (API)
 
 app.get("/deliveryTime", async function (request, response) {
-
   const data = await client
     .db("Swiggy")
     .collection("product")
-    .find({}).sort( { delivery : 1} )
+    .find({})
+    .sort({ delivery: 1 })
     .toArray();
 
   response.send(data);
 });
 
-
-//  get shopDetails by low to high (API)  
+//  get shopDetails by low to high (API)
 
 app.get("/LowToHigh", async function (request, response) {
-
   const data = await client
     .db("Swiggy")
     .collection("product")
-    .find({}).sort( { price : 1} )
+    .find({})
+    .sort({ price: 1 })
     .toArray();
 
   response.send(data);
 });
 
-
-//  get shopDetails by high to low (API)  
+//  get shopDetails by high to low (API)
 
 app.get("/HighToLow", async function (request, response) {
-
   const data = await client
     .db("Swiggy")
     .collection("product")
-    .find({}).sort( { price : -1} )
+    .find({})
+    .sort({ price: -1 })
     .toArray();
 
   response.send(data);
 });
 
-
-
-//  get shopDetails by Rating (API)  
+//  get shopDetails by Rating (API)
 
 app.get("/Rating", async function (request, response) {
-
   const data = await client
     .db("Swiggy")
     .collection("product")
-    .find({}).sort( { rating : -1} )
+    .find({})
+    .sort({ rating: -1 })
     .toArray();
 
   response.send(data);
 });
 
+//  create data (API)
 
-
-//  create data (API) 
-
-app.post("/createData", express.json() , async function (request, response) {
-
+app.post("/createData", express.json(), async function (request, response) {
   const data = request.body;
   const result = await client
     .db("Swiggy")
@@ -120,103 +108,138 @@ app.post("/createData", express.json() , async function (request, response) {
   response.send(result);
 });
 
-
 //  update shop data (API) -
 
-app.put("/shopId/:id",express.json(), async function (request, response) {
-  const {id} = request.params;
+app.put("/shopId/:id", express.json(), async function (request, response) {
+  const { id } = request.params;
   const data = request.body;
 
   const result = await client
     .db("Swiggy")
     .collection("product")
-    .updateOne({id : id } , { $set : data});
+    .updateOne({ id: id }, { $set: data });
 
   response.send(result);
 });
 
-
-//  delete All data (API) 
+//  delete All data (API)
 
 app.delete("/deleteAll", async function (request, response) {
-
-  const result = await client
-    .db("Swiggy")
-    .collection("product")
-    .deleteMany({});
+  const result = await client.db("Swiggy").collection("product").deleteMany({});
 
   response.send(result);
 });
 
-//  delete one shop data (API) 
+//  delete one shop data (API)
 
 app.delete("/delete/:shopName", async function (request, response) {
-
-  const {shopName} = request.params;
+  const { shopName } = request.params;
 
   const result = await client
     .db("Swiggy")
     .collection("product")
-    .deleteOne({shopName : shopName});
+    .deleteOne({ shopName: shopName });
 
   response.send(result);
 });
 
 // create bank payment offer API
 
-app.post("/createPaymentOffers", express.json() , async function (request, response) {
+app.post(
+  "/createPaymentOffers",
+  express.json(),
+  async function (request, response) {
+    const data = request.body;
 
-  const data = request.body;
+    const result = await client
+      .db("Swiggy")
+      .collection("paymentOffers")
+      .insertMany(data);
 
-  const result = await client
-    .db("Swiggy")
-    .collection("paymentOffers")
-    .insertMany(data)
-
-  response.send(result);
-});
-
+    response.send(result);
+  }
+);
 
 // get bank payment offer API
 
-app.get("/PaymentOffers" , async function (request, response) {
-
+app.get("/PaymentOffers", async function (request, response) {
   const result = await client
     .db("Swiggy")
     .collection("paymentOffers")
     .find({})
-    .toArray()
+    .toArray();
 
   response.send(result);
 });
 
+// create city links API
 
-// create city links API  
+app.post(
+  "/createCityLinks",
+  express.json(),
+  async function (request, response) {
+    const data = request.body;
 
-app.post("/createCityLinks", express.json() , async function (request, response) {
+    const result = await client
+      .db("Swiggy")
+      .collection("cityLinks")
+      .insertMany(data);
 
-  const data = request.body;
+    response.send(result);
+  }
+);
 
-  const result = await client
-    .db("Swiggy")
-    .collection("cityLinks")
-    .insertMany(data)
+// get city links API
 
-  response.send(result);
-});
-
-
-// get city links API  
-
-app.get("/CityLinks" , async function (request, response) {
-
+app.get("/CityLinks", async function (request, response) {
   const result = await client
     .db("Swiggy")
     .collection("cityLinks")
     .find({})
-    .toArray()
+    .toArray();
 
   response.send(result);
 });
+
+// Store  password signUp
+
+app.post("/signUp", express.json(), async function (request, response) {
+  const { PhoneNumber, Name, Email } = request.body;
+
+  const userPhoneNumber = await getUserPhoneNumber(PhoneNumber);
+
+  if (userPhoneNumber) {
+    response
+      .status(400)
+      .send({ Message: "Phone Number Already Exists ! Please Log In" });
+  } else {
+    const result = await client.db("Swiggy").collection("userPass").insertOne({
+      Name: Name,
+      PhoneNumber: PhoneNumber,
+      Email: Email,
+    });
+    response.send(result);
+  }
+});
+
+
+// get password LogIn
+
+app.get("/LogIn",express.json(), async function (request, response) {
+  const { PhoneNumber } = request.body;
+
+  console.log(PhoneNumber);
+
+  const userPhoneNumber = await getUserPhoneNumber(PhoneNumber);
+
+  // console.log(userPhoneNumber);
+
+  if(userPhoneNumber) {
+    response.send({ Message: "Successfully Logged In" });
+  } else {
+    response.status(400).send({Message : 'Invalid credentials'})
+    };
+  }
+);
 
 app.listen(PORT, () => console.log(`Connected in ${PORT}`));
