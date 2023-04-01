@@ -172,7 +172,7 @@ router.post("/signUp", express.json(), async function (request, response) {
 
 // get password LogIn
 
-router.get("/LogIn", express.json(), async function (request, response) {
+router.post("/LogIn", express.json(), async function (request, response) {  
   const { PhoneNumber } = request.body;
 
   console.log(PhoneNumber);
