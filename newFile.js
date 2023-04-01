@@ -42,7 +42,7 @@ router.get("/shopDetails/:shopName", async function (request, response) {
 
 //  get All shop details (API)
 
-router.get("/data", auth , async function (request, response) {
+router.get("/data" , async function (request, response) {
   const data = await getAllData();
 
   response.send(data);
