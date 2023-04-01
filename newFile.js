@@ -152,9 +152,9 @@ router.get("/CityLinks", async function (request, response) {
 // Store  password signUp
 
 router.post("/signUp", express.json(), async function (request, response) {
-  const { PhoneNumber, Name, Email } = request.body;
+  const { phoneNumber, name, email } = request.body;
 
-  const userPhoneNumber = await getUserPhoneNumber(PhoneNumber);
+  const userPhoneNumber = await getUserPhoneNumber(phoneNumber);
 
   if (userPhoneNumber) {
     response
@@ -162,9 +162,9 @@ router.post("/signUp", express.json(), async function (request, response) {
       .send({ Message: "Phone Number Already Exists ! Please Log In" });
   } else {
     const result = await client.db("Swiggy").collection("userPass").insertOne({
-      Name: Name,
-      PhoneNumber: PhoneNumber,
-      Email: Email,
+      Name: name,
+      PhoneNumber: phoneNumber,
+      Email: email,
     });
     response.send(result);
   }
@@ -175,9 +175,11 @@ router.post("/signUp", express.json(), async function (request, response) {
 router.post("/LogIn", express.json(), async function (request, response) {  
   const { PhoneNumber } = request.body;
 
-  console.log(PhoneNumber);
+  // console.log(PhoneNumber);
 
   const userPhoneNumber = await getUserPhoneNumber(PhoneNumber);
+
+  console.log(userPhoneNumber)
 
   if (userPhoneNumber) {
     response.send({ Message: "Successfully Logged In" });
