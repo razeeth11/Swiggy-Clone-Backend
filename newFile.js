@@ -20,6 +20,7 @@ import { app, client } from "./index.js";
 import * as dotenv from 'dotenv';
 dotenv.config()
 import jwt from 'jsonwebtoken';
+import { auth } from "./auth.js";
 
 const router = express.Router();
 
@@ -41,7 +42,7 @@ router.get("/shopDetails/:shopName", async function (request, response) {
 
 //  get All shop details (API)
 
-router.get("/data", async function (request, response) {
+router.get("/data", auth , async function (request, response) {
   const data = await getAllData();
 
   response.send(data);
