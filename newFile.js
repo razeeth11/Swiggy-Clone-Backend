@@ -17,6 +17,9 @@ import {
   getCityLinks,
 } from "./getDataByShopName.js";
 import { app, client } from "./index.js";
+import * as dotenv from 'dotenv';
+dotenv.config()
+import jwt from 'jsonwebtoken';
 
 const router = express.Router();
 
@@ -175,14 +178,12 @@ router.post("/signUp", express.json(), async function (request, response) {
 router.post("/LogIn", express.json(), async function (request, response) {  
   const { PhoneNumber } = request.body;
 
-  // console.log(PhoneNumber);
-
   const userPhoneNumber = await getUserPhoneNumber(PhoneNumber);
 
-  console.log(userPhoneNumber)
-
+  
   if (userPhoneNumber) {
-    response.send({ Message: "Successfully Logged In" });
+    const token = jwt.sign({id : userPhoneNumber._id}, process.env.SECRET_KEY)
+    response.send({ Message: "Successfully Logged In" , Token : token });
   } else {
     response.status(400).send({ Message: "Invalid credentials" });
   }
