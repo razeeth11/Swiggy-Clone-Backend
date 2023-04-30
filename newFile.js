@@ -17,9 +17,9 @@ import {
   getCityLinks,
 } from "./getDataByShopName.js";
 import { app, client } from "./index.js";
-import * as dotenv from 'dotenv';
-dotenv.config()
-import jwt from 'jsonwebtoken';
+import * as dotenv from "dotenv";
+dotenv.config();
+import jwt from "jsonwebtoken";
 import { auth } from "./auth.js";
 
 const router = express.Router();
@@ -42,7 +42,7 @@ router.get("/shopDetails/:shopName", async function (request, response) {
 
 //  get All shop details (API)
 
-router.get("/data" , async function (request, response) {
+router.get("/data", async function (request, response) {
   const data = await getAllData();
 
   response.send(data);
@@ -119,7 +119,10 @@ router.delete("/delete/:shopName", async function (request, response) {
 
 // create bank payment offer API
 
-router.post( "/createPaymentOffers", express.json(), async function (request, response) {
+router.post(
+  "/createPaymentOffers",
+  express.json(),
+  async function (request, response) {
     const data = request.body;
     const result = await createPaymentOffers(data);
 
@@ -137,7 +140,10 @@ router.get("/PaymentOffers", async function (request, response) {
 
 // create city links API
 
-router.post( "/createCityLinks", express.json(), async function (request, response) {
+router.post(
+  "/createCityLinks",
+  express.json(),
+  async function (request, response) {
     const data = request.body;
     const result = await createCityLinks(data);
 
@@ -176,15 +182,14 @@ router.post("/signUp", express.json(), async function (request, response) {
 
 // get password LogIn
 
-router.post("/LogIn", express.json(), async function (request, response) {  
+router.post("/LogIn", express.json(), async function (request, response) {
   const { PhoneNumber } = request.body;
 
   const userPhoneNumber = await getUserPhoneNumber(PhoneNumber);
 
-  
   if (userPhoneNumber) {
-    const token = jwt.sign({id : userPhoneNumber._id}, process.env.SECRET_KEY)
-    response.send({ Message: "Successfully Logged In" , Token : token });
+    const token = jwt.sign({ id: userPhoneNumber._id }, process.env.SECRET_KEY);
+    response.send({ Message: "Successfully Logged In", Token: token });
   } else {
     response.status(400).send({ Message: "Invalid credentials" });
   }
